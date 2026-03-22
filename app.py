@@ -7,25 +7,37 @@ import math
 app = Flask(__name__, template_folder='client/templates')
 
 # --- Load your saved model & encoder (paths used in your Colab)
-MODEL_PATH = "post_analysis_proxy_model.pkl"
-ENCODER_PATH = "post_type_encoder.pkl"
+MODEL_PATH = "model/post_analysis_proxy_model.pkl"
+ENCODER_PATH = "model/post_type_encoder.pkl"
 
-# Placeholder loading (assuming the user has these files)
+def build_dummy_artifacts():
+    """Fallback model/encoder so the UI can still be tested locally."""
+
+    class DummyEncoder:
+        classes_ = ["Reel", "Video", "Image", "Story"]
+
+        def transform(self, pt):
+            mapping = {"Reel": 0, "Video": 1, "Image": 2, "Story": 3}
+            return [mapping.get(pt[0], 0)]
+
+    class DummyModel:
+        def predict(self, df):
+            return [2500]
+
+    return DummyModel(), DummyEncoder()
+
+
+# Load the saved model/encoder when available, but keep local development usable
+# even if the ML environment is missing or incompatible.
 try:
     model = joblib.load(MODEL_PATH)
     encoder = joblib.load(ENCODER_PATH)
-except FileNotFoundError:
-    print("Warning: Model or encoder files not found. Using dummy data for analysis endpoints.")
-    # Implement dummy model/encoder for local testing without the ML files
-    class DummyEncoder:
-        def classes_(self): return ["Reel", "Video", "Image", "Story"]
-        def transform(self, pt): 
-            mapping = {"Reel": 0, "Video": 1, "Image": 2, "Story": 3}
-            return [mapping.get(pt[0], 0)]
-    class DummyModel:
-        def predict(self, df): return [2500]
-    model = DummyModel()
-    encoder = DummyEncoder()
+except Exception as exc:
+    print(
+        f"Warning: could not load model artifacts ({type(exc).__name__}: {exc}). "
+        "Using dummy data for analysis endpoints."
+    )
+    model, encoder = build_dummy_artifacts()
 
 
 # --- helper mappings

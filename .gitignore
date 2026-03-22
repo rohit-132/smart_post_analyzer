@@ -1,11 +1,12 @@
 Environment and dependencies
-pycache/
-*.pyc
-*.egg-info/
 venv/
-.env
+.venv/
+node_modules/
+__pycache__/
+.idea/
+*.pyc
 
 Large model files (IF too big for GitHub's file limit)
 If your .pkl files are small (under 25MB), you can delete these lines:
 post_analysis_proxy_model.pkl
-post_type_encoder.pkl
+post_type_encoder.pkl              
