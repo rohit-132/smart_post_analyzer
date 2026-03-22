@@ -1,0 +1,5 @@
+outs:
+- md5: 4df13903d14556abc15c2348ab5a4edc
+  size: 504
+  hash: md5
+  path: post_type_encoder.pkl

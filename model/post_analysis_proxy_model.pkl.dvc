@@ -1,0 +1,5 @@
+outs:
+- md5: 1310d35286e637cec9a768b3684913b9
+  size: 3632961
+  hash: md5
+  path: post_analysis_proxy_model.pkl
