@@ -7,6 +7,12 @@ import math
 app = Flask(__name__, template_folder='client/templates')
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+
+@app.after_request
+def add_header(response):
+    response.cache_control.no_store = True
+    return response
+
 # --- Load your saved model & encoder (paths used in your Colab)
 MODEL_PATH = "model/post_analysis_proxy_model.pkl"
 ENCODER_PATH = "model/post_type_encoder.pkl"
